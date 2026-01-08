@@ -86,7 +86,7 @@ export default function App() {
           backgroundPosition: "center",
         }}
       >
-        <h1>8番出口（仮）</h1>
+        <h1>8番出口</h1>
 
         <div
           style={{
