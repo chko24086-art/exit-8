@@ -150,41 +150,42 @@ export default function App() {
   }
 
   /*===ゲーム画面===*/
-  return (
-    <div style={{ textAlign: "center" }}>
-      <div
-        style={{
-          position: "fixed",
-          bottom: "10px",
-          left: "10px",
-          fontSize: "18px",
-        }}
-      >
-        現在位置：{count}番出口
-      </div>
-
-      <img
-        src={stage.image}
-        alt="stage"
-        width={600} // ステージ画像を大きく
-        style={{ border: "1px solid black", marginTop: "40px" }}
-      />
-
-      {phase === "observe" && (
-        <p style={{ marginTop: "20px" }}>観察中… 残り {timeLeft} 秒</p>
-      )}
-
-      {phase === "choice" && (
-        <div style={{ marginTop: "20px" }}>
-          <button onClick={() => judge("left")}>引き返す</button>
-          <button
-            onClick={() => judge("right")}
-            style={{ marginLeft: "10px" }}
-          >
-            引き返さない
-          </button>
-        </div>
-      )}
+ /* ===== ゲーム画面 ===== */
+return (
+  <div style={{ textAlign: "center" }}>
+    <div
+      style={{
+        position: "fixed",
+        bottom: "10px",
+        left: "10px",
+        fontSize: "18px",
+      }}
+    >
+      現在位置：{count}番出口
     </div>
-  );
-}
+
+    <img
+      src={stage.image}
+      alt="stage"
+      width={500}
+      style={{ border: "1px solid black", marginTop: "40px" }}
+    />
+
+    {phase === "observe" && (
+      <p style={{ marginTop: "20px" }}>観察中… 残り {timeLeft} 秒</p>
+    )}
+
+    {phase === "choice" && (
+      <div style={{ marginTop: "20px" }}>
+        <p>【デバッグ表示】このステージは {stage.hasMistake ? "F" : "T"} ステージです</p>
+        <button onClick={() => judge("left")}>引き返す</button>
+        <button
+          onClick={() => judge("right")}
+          style={{ marginLeft: "10px" }}
+        >
+          引き返さない
+        </button>
+      </div>
+    )}
+  </div>
+);
