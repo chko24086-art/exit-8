@@ -1,22 +1,14 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-/* ===== ステージ画像 ===== */
-import trueStage from "./ステージイラスト/trueStage.png";
-import falseStage1 from "./ステージイラスト/falseStage1.png";
-import falseStage2 from "./ステージイラスト/falseStage2.png";
-import falseStage3 from "./ステージイラスト/falseStage3.png";
-import falseStage4 from "./ステージイラスト/falseStage4.png";
-import falseStage5 from "./ステージイラスト/falseStage5.png";
-
 /* ===== ステージ生成 ===== */
-const trueStages = [trueStage];
+const trueStages = ["/trueStage.png"];
 const falseStages = [
-  falseStage1,
-  falseStage2,
-  falseStage3,
-  falseStage4,
-  falseStage5,
+  "/falseStage1.png",
+  "/falseStage2.png",
+  "/falseStage3.png",
+  "/falseStage4.png",
+  "/falseStage5.png",
 ];
 
 function generateStage(forceTrue = false) {
