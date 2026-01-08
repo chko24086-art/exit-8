@@ -78,60 +78,86 @@ export default function App() {
 
   /* ===== タイトル画面 ===== */
   if (screen === "title") {
-    return (
-      <div style={{ textAlign: "center", marginTop: "80px" }}>
-        <h1>8番出口（仮）</h1>
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        height: "100vh",               // 画面全体に背景を表示
+        backgroundImage: "url('/start_background.png')", // public フォルダに置いた画像
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        color: "white",
+        paddingTop: "80px",
+      }}
+    >
+      <h1>8番出口（仮）</h1>
 
-        <div
-          style={{
-            display: "inline-block",
-            textAlign: "left",
-            margin: "30px 0",
-            border: "1px solid #333",
-            padding: "15px",
-            background: "#eee",
-            color: "black",
-          }}
-        >
-          <h3>ご案内 Information</h3>
-          {infoText.map((line, i) => (
-            <p key={i}>{line}</p>
-          ))}
-        </div>
-
-        <br />
-
-        <button
-          style={{ fontSize: "18px", padding: "10px 20px" }}
-          onClick={() => {
-            setCount(0);
-            setStage(generateStage(true));
-            setTimeLeft(10);
-            setPhase("observe");
-            setScreen("game");
-          }}
-        >
-          帰宅する
-        </button>
+      <div
+        style={{
+          display: "inline-block",
+          textAlign: "left",
+          margin: "30px 0",
+          border: "1px solid #333",
+          padding: "15px",
+          background: "rgba(0,0,0,0.5)", // 半透明で文字を読みやすく
+          color: "white",
+        }}
+      >
+        <h3>ご案内 Information</h3>
+        <p>異変を見逃さないこと</p>
+        <p>異変を見つけたら、すぐに引き返すこと</p>
+        <p>異変が見つからなかったら、引き返さないこと</p>
+        <p>8番出口から外に出ること</p>
       </div>
-    );
-  }
+
+      <br />
+
+      <button
+        style={{ fontSize: "18px", padding: "10px 20px" }}
+        onClick={() => {
+          setCount(0);
+          setStage(generateStage(true));
+          setTimeLeft(10);
+          setPhase("observe");
+          setScreen("game");
+        }}
+      >
+        帰宅する
+      </button>
+    </div>
+  );
+}
 
   /* ===== クリア画面 ===== */
   if (screen === "clear") {
-    return (
-      <div style={{ textAlign: "center", marginTop: "100px" }}>
-        <h1>あなたは8番出口に到達した。</h1>
-        <p>その後、無事に帰宅した。</p>
-        <button
-          style={{ marginTop: "20px" }}
-          onClick={() => setScreen("title")}
-        >
-          タイトルへ戻る
-        </button>
-      </div>
-    );
-  }
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        height: "100vh",                     // 画面全体に背景を表示
+        backgroundImage: "url('/clear_background.png')", // タイトル画面と同じ背景画像
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        color: "white",
+        paddingTop: "100px",
+      }}
+    >
+      <h1>あなたは8番出口に到達した。</h1>
+      <p>その後、無事に帰宅した。</p>
+
+      <button
+        style={{
+          marginTop: "20px",
+          fontSize: "18px",
+          padding: "10px 20px",
+        }}
+        onClick={() => setScreen("title")}
+      >
+        タイトルへ戻る
+      </button>
+    </div>
+  );
+}
 
   /* ===== ゲーム画面 ===== */
   return (
