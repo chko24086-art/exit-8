@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-/* ===== ステージ生成 ===== */
-const trueStages = ["/trueStage.png"];
-const falseStages = [
-  "/falseStage1.png",
-  "/falseStage2.png",
-  "/falseStage3.png",
-  "/falseStage4.png",
-  "/falseStage5.png",
+/* ===== ステージ画像（public/images 内） ===== */
+const trueStages = [
+  "/images/trueStage.png"
 ];
 
+const falseStages = [
+  "/images/falseStage1.png",
+  "/images/falseStage2.png",
+  "/images/falseStage3.png",
+  "/images/falseStage4.png",
+  "/images/falseStage5.png"
+];
+
+/* ===== ステージ生成 ===== */
 function generateStage(forceTrue = false) {
   const hasMistake = forceTrue ? false : Math.random() < 0.5;
   const images = hasMistake ? falseStages : trueStages;
@@ -18,21 +22,20 @@ function generateStage(forceTrue = false) {
   return { hasMistake, image };
 }
 
-/* ===== App ===== */
 export default function App() {
-  /*=== state ===*/
+  /* ===== state ===== */
   const [screen, setScreen] = useState("title"); // title | game | clear
   const [count, setCount] = useState(0);
   const [stage, setStage] = useState(generateStage(true));
   const [phase, setPhase] = useState("observe"); // observe | choice
   const [timeLeft, setTimeLeft] = useState(10);
 
-  /*=== カウント管理（間違えたら0にリセット） ===*/
-  function addCount(delta, correct) {
-    setCount((prev) => (correct ? prev + delta : 0));
+  /* ===== カウント管理（間違えたら0にリセット） ===== */
+  function addCount(delta) {
+    setCount((prev) => Math.max(0, prev + delta));
   }
 
-  /*=== タイマー（観察フェーズ専用） ===*/
+  /* ===== タイマー（観察フェーズ専用） ===== */
   useEffect(() => {
     if (screen !== "game") return;
     if (phase !== "observe") return;
@@ -44,22 +47,23 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [screen, phase, timeLeft]);
 
-  /*=== フェーズ切り替え（時間切れ判定） ===*/
+  /* ===== フェーズ切り替え（時間切れ判定） ===== */
   useEffect(() => {
     if (timeLeft === 0 && phase === "observe") {
       setPhase("choice");
     }
   }, [timeLeft, phase]);
 
-  /*=== 判定 ===*/
+  /* ===== 判定 ===== */
   function judge(choice) {
     const correct =
       (choice === "right" && !stage.hasMistake) ||
       (choice === "left" && stage.hasMistake);
 
-    addCount(1, correct);
+    const nextCount = correct ? count + 1 : 0; // 間違えたら0にリセット
+    setCount(nextCount);
 
-    if (correct && count + 1 >= 8) {
+    if (nextCount >= 8) {
       setScreen("clear");
       return;
     }
@@ -69,18 +73,18 @@ export default function App() {
     setPhase("observe");
   }
 
-  /*=== タイトル画面 ===*/
+  /* ===== タイトル画面 ===== */
   if (screen === "title") {
     return (
       <div
         style={{
           textAlign: "center",
-          height: "100vh",
-          backgroundImage: "url('/start_background.png')",
+          marginTop: "0",
+          backgroundImage: "url('/images/start_background.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          color: "white",
-          paddingTop: "80px",
+          height: "100vh",
+          color: "black"
         }}
       >
         <h1>8番出口（仮）</h1>
@@ -92,8 +96,8 @@ export default function App() {
             margin: "30px 0",
             border: "1px solid #333",
             padding: "15px",
-            background: "rgba(0,0,0,0.5)",
-            color: "white",
+            background: "#eee",
+            color: "black",
           }}
         >
           <h3>ご案内 Information</h3>
@@ -121,29 +125,24 @@ export default function App() {
     );
   }
 
-  /*=== クリア画面 ===*/
+  /* ===== クリア画面 ===== */
   if (screen === "clear") {
     return (
       <div
         style={{
           textAlign: "center",
-          height: "100vh",
-          backgroundImage: "url('/clear_background.png')",
+          marginTop: "0",
+          backgroundImage: "url('/images/clear_background.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          color: "white",
-          paddingTop: "100px",
+          height: "100vh",
+          color: "black"
         }}
       >
         <h1>あなたは8番出口に到達した。</h1>
         <p>その後、無事に帰宅した。</p>
-
         <button
-          style={{
-            marginTop: "20px",
-            fontSize: "18px",
-            padding: "10px 20px",
-          }}
+          style={{ marginTop: "20px" }}
           onClick={() => setScreen("title")}
         >
           タイトルへ戻る
@@ -152,7 +151,7 @@ export default function App() {
     );
   }
 
-  /*=== ゲーム画面 ===*/
+  /* ===== ゲーム画面 ===== */
   return (
     <div style={{ textAlign: "center" }}>
       <div
@@ -169,7 +168,7 @@ export default function App() {
       <img
         src={stage.image}
         alt="stage"
-        width={600}
+        width={400}
         style={{ border: "1px solid black", marginTop: "40px" }}
       />
 
