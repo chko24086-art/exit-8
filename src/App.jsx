@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-/* ===== ステージ画像 ===== */
-const trueStages = ["/images/trueStage.png"];
+/*===ステージ画像===*/
+const trueStages = [
+  "/images/trueStage.png",
+];
+
 const falseStages = [
   "/images/falseStage1.png",
   "/images/falseStage2.png",
@@ -11,7 +14,7 @@ const falseStages = [
   "/images/falseStage5.png",
 ];
 
-/* ===== ステージ生成 ===== */
+/*===ステージ生成===*/
 function generateStage(forceTrue = false) {
   const hasMistake = forceTrue ? false : Math.random() < 0.5;
   const images = hasMistake ? falseStages : trueStages;
@@ -20,21 +23,22 @@ function generateStage(forceTrue = false) {
 }
 
 export default function App() {
-  /* ===== state ===== */
+  /*===state===*/
   const [screen, setScreen] = useState("title"); // title | game | clear
   const [count, setCount] = useState(0);
   const [stage, setStage] = useState(generateStage(true));
   const [phase, setPhase] = useState("observe"); // observe | choice
   const [timeLeft, setTimeLeft] = useState(10);
 
-  /* ===== カウント管理（リセット仕様） ===== */
-  function addCount(delta, reset = false) {
-    setCount((prev) => (reset ? 0 : Math.max(0, prev + delta)));
+  /*===カウント管理（マイナス防止）===*/
+  function addCount(delta) {
+    setCount((prev) => Math.max(0, prev + delta));
   }
 
-  /* ===== タイマー（観察フェーズ専用） ===== */
+  /*===タイマー（観察フェーズ専用）===*/
   useEffect(() => {
-    if (screen !== "game" || phase !== "observe") return;
+    if (screen !== "game") return;
+    if (phase !== "observe") return;
 
     const timer = setTimeout(() => {
       setTimeLeft((t) => Math.max(0, t - 1));
@@ -43,20 +47,20 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [screen, phase, timeLeft]);
 
-  /* ===== フェーズ切り替え（時間切れ判定） ===== */
+  /*===フェーズ切り替え（時間切れ判定）===*/
   useEffect(() => {
     if (timeLeft === 0 && phase === "observe") {
       setPhase("choice");
     }
   }, [timeLeft, phase]);
 
-  /* ===== 判定 ===== */
+  /*===判定===*/
   function judge(choice) {
     const correct =
       (choice === "right" && !stage.hasMistake) ||
       (choice === "left" && stage.hasMistake);
 
-    const nextCount = correct ? count + 1 : 0; // 間違えたらリセット
+    const nextCount = correct ? count + 1 : 0; // 間違えたら0にリセット
     setCount(nextCount);
 
     if (nextCount >= 8) {
@@ -69,16 +73,17 @@ export default function App() {
     setPhase("observe");
   }
 
-  /* ===== タイトル画面 ===== */
+  /*===タイトル===*/
   if (screen === "title") {
     return (
       <div
         style={{
           textAlign: "center",
           marginTop: "80px",
-          backgroundImage: "url('/images/start_background.png')",
-          backgroundSize: "cover",
           minHeight: "100vh",
+          backgroundImage: "url(/images/start_background.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <h1>8番出口（仮）</h1>
@@ -119,16 +124,17 @@ export default function App() {
     );
   }
 
-  /* ===== クリア画面 ===== */
+  /*===クリア===*/
   if (screen === "clear") {
     return (
       <div
         style={{
           textAlign: "center",
           marginTop: "100px",
-          backgroundImage: "url('/images/clear_background.png')",
-          backgroundSize: "cover",
           minHeight: "100vh",
+          backgroundImage: "url(/images/clear_background.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <h1>あなたは8番出口に到達した。</h1>
@@ -143,7 +149,7 @@ export default function App() {
     );
   }
 
-  /* ===== ゲーム画面 ===== */
+  /*===ゲーム画面===*/
   return (
     <div style={{ textAlign: "center" }}>
       <div
@@ -160,7 +166,7 @@ export default function App() {
       <img
         src={stage.image}
         alt="stage"
-        width={600}
+        width={600} // ステージ画像を大きく
         style={{ border: "1px solid black", marginTop: "40px" }}
       />
 
