@@ -1,13 +1,11 @@
 {
   "name": "8ban-exit",
-  "private": true,
   "version": "0.0.0",
-  "type": "module",
-  "homepage": "https://chko24086-art.github.io/exit-8/",
+  "private": true,
+  "homepage": "https://chko24086-art.github.io/exit-8",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
