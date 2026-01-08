@@ -1,17 +1,14 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-/* ===== ステージ画像（public/images 内） ===== */
-const trueStages = [
-  "/images/trueStage.png"
-];
-
+/* ===== ステージ画像 ===== */
+const trueStages = ["/images/trueStage.png"];
 const falseStages = [
   "/images/falseStage1.png",
   "/images/falseStage2.png",
   "/images/falseStage3.png",
   "/images/falseStage4.png",
-  "/images/falseStage5.png"
+  "/images/falseStage5.png",
 ];
 
 /* ===== ステージ生成 ===== */
@@ -30,15 +27,14 @@ export default function App() {
   const [phase, setPhase] = useState("observe"); // observe | choice
   const [timeLeft, setTimeLeft] = useState(10);
 
-  /* ===== カウント管理（間違えたら0にリセット） ===== */
-  function addCount(delta) {
-    setCount((prev) => Math.max(0, prev + delta));
+  /* ===== カウント管理（リセット仕様） ===== */
+  function addCount(delta, reset = false) {
+    setCount((prev) => (reset ? 0 : Math.max(0, prev + delta)));
   }
 
   /* ===== タイマー（観察フェーズ専用） ===== */
   useEffect(() => {
-    if (screen !== "game") return;
-    if (phase !== "observe") return;
+    if (screen !== "game" || phase !== "observe") return;
 
     const timer = setTimeout(() => {
       setTimeLeft((t) => Math.max(0, t - 1));
@@ -60,7 +56,7 @@ export default function App() {
       (choice === "right" && !stage.hasMistake) ||
       (choice === "left" && stage.hasMistake);
 
-    const nextCount = correct ? count + 1 : 0; // 間違えたら0にリセット
+    const nextCount = correct ? count + 1 : 0; // 間違えたらリセット
     setCount(nextCount);
 
     if (nextCount >= 8) {
@@ -79,12 +75,10 @@ export default function App() {
       <div
         style={{
           textAlign: "center",
-          marginTop: "0",
+          marginTop: "80px",
           backgroundImage: "url('/images/start_background.png')",
           backgroundSize: "cover",
-          backgroundPosition: "center",
-          height: "100vh",
-          color: "black"
+          minHeight: "100vh",
         }}
       >
         <h1>8番出口（仮）</h1>
@@ -131,12 +125,10 @@ export default function App() {
       <div
         style={{
           textAlign: "center",
-          marginTop: "0",
+          marginTop: "100px",
           backgroundImage: "url('/images/clear_background.png')",
           backgroundSize: "cover",
-          backgroundPosition: "center",
-          height: "100vh",
-          color: "black"
+          minHeight: "100vh",
         }}
       >
         <h1>あなたは8番出口に到達した。</h1>
@@ -168,7 +160,7 @@ export default function App() {
       <img
         src={stage.image}
         alt="stage"
-        width={400}
+        width={600}
         style={{ border: "1px solid black", marginTop: "40px" }}
       />
 
