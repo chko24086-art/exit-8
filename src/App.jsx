@@ -149,10 +149,10 @@ export default function App() {
     );
   }
 
-  /*===ゲーム画面===*/
  /* ===== ゲーム画面 ===== */
 return (
   <div style={{ textAlign: "center" }}>
+    {/* 現在位置 */}
     <div
       style={{
         position: "fixed",
@@ -164,27 +164,31 @@ return (
       現在位置：{count}番出口
     </div>
 
+    {/* ステージ画像 */}
     <img
       src={stage.image}
       alt="stage"
-      width={500}
+      width={600}
       style={{ border: "1px solid black", marginTop: "40px" }}
     />
 
+    {/* 観察フェーズ */}
     {phase === "observe" && (
       <p style={{ marginTop: "20px" }}>観察中… 残り {timeLeft} 秒</p>
     )}
 
+    {/* 選択フェーズ */}
     {phase === "choice" && (
       <div style={{ marginTop: "20px" }}>
-        <p>【デバッグ表示】このステージは {stage.hasMistake ? "F" : "T"} ステージです</p>
         <button onClick={() => judge("left")}>引き返す</button>
-        <button
-          onClick={() => judge("right")}
-          style={{ marginLeft: "10px" }}
-        >
+        <button onClick={() => judge("right")} style={{ marginLeft: "10px" }}>
           引き返さない
         </button>
+
+        {/* デバッグ用 T/F ステージ表示 */}
+        <p style={{ marginTop: "10px", fontWeight: "bold", fontSize: "20px" }}>
+          {stage.hasMistake ? "Fステージ" : "Tステージ"}
+        </p>
       </div>
     )}
   </div>
