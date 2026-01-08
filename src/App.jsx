@@ -149,48 +149,72 @@ export default function App() {
     );
   }
 
- /* ===== ゲーム画面 ===== */
-return (
-  <div style={{ textAlign: "center" }}>
-    {/* 現在位置 */}
-    <div
-      style={{
-        position: "fixed",
-        bottom: "10px",
-        left: "10px",
-        fontSize: "18px",
-      }}
-    >
-      現在位置：{count}番出口
-    </div>
-
-    {/* ステージ画像 */}
-    <img
-      src={stage.image}
-      alt="stage"
-      width={600}
-      style={{ border: "1px solid black", marginTop: "40px" }}
-    />
-
-    {/* 観察フェーズ */}
-    {phase === "observe" && (
-      <p style={{ marginTop: "20px" }}>観察中… 残り {timeLeft} 秒</p>
-    )}
-
-    {/* 選択フェーズ */}
-    {phase === "choice" && (
-      <div style={{ marginTop: "20px" }}>
-        <button onClick={() => judge("left")}>引き返す</button>
-        <button onClick={() => judge("right")} style={{ marginLeft: "10px" }}>
-          引き返さない
-        </button>
-
-        {/* デバッグ用 T/F ステージ表示 */}
-        <p style={{ marginTop: "10px", fontWeight: "bold", fontSize: "20px" }}>
-          {stage.hasMistake ? "Fステージ" : "Tステージ"}
-        </p>
+  /*===ゲーム画面===*/
+  return (
+    <div style={{ textAlign: "center" }}>
+      <div
+        style={{
+          position: "fixed",
+          bottom: "10px",
+          left: "10px",
+          fontSize: "18px",
+        }}
+      >
+        現在位置：{count}番出口
       </div>
+
+      <img
+        src={stage.image}
+        alt="stage"
+        width={600} // ステージ画像を大きく
+        style={{ border: "1px solid black", marginTop: "40px" }}
+      />
+
+      {phase === "observe" && (
+        <p style={{ marginTop: "20px" }}>観察中… 残り {timeLeft} 秒</p>
+      )}
+
+      {phase === "choice" && (
+        <div style={{ marginTop: "20px" }}>
+          <button onClick={() => judge("left")}>引き返す</button>
+          <button
+            onClick={() => judge("right")}
+            style={{ marginLeft: "10px" }}
+          >
+            引き返さない
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/*===選択フェーズ中のT/F表示===*/
+const [showStageInfo, setShowStageInfo] = useState(true);
+
+/*===選択ボタン押下時に非表示にする===*/
+function handleChoice(choice) {
+  setShowStageInfo(false); // 追加
+
+  judge(choice); // 既存の判定関数呼び出し
+}
+
+/*===ゲーム画面 JSX 内で、phase === "choice" の部分を書き換え===*/
+{phase === "choice" && (
+  <div style={{ marginTop: "20px" }}>
+    <button onClick={() => handleChoice("left")}>引き返す</button>
+    <button
+      onClick={() => handleChoice("right")}
+      style={{ marginLeft: "10px" }}
+    >
+      引き返さない
+    </button>
+
+    {/* 選択中のみ表示 */}
+    {showStageInfo && (
+      <p style={{ marginTop: "10px", fontWeight: "bold" }}>
+        {stage.hasMistake ? "Fステージ" : "Tステージ"}
+      </p>
     )}
   </div>
-);
-}
+)}
